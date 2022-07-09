@@ -1,0 +1,166 @@
+#define echoPin P1_0
+#define trigPin P1_1
+#include <SoftwareSerial.h>
+SoftwareSerial GSM(P2_6, P2_7);
+long duration;
+int distance;
+int a,b;
+
+void setup() 
+{
+  GSM.begin(9600);
+  Serial.begin(9600);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(P1_2, OUTPUT);
+  pinMode(P1_3, OUTPUT);
+  pinMode(P1_4, OUTPUT);
+  pinMode(P1_5, OUTPUT);
+  pinMode(P1_6, INPUT);
+  pinMode(P2_5, INPUT);
+  pinMode(P2_0, OUTPUT);
+  pinMode(P2_1, OUTPUT);
+  pinMode(P2_2, OUTPUT);
+  pinMode(P2_3, OUTPUT);
+  pinMode(P2_4, OUTPUT);
+  
+  
+ } 
+
+void loop() 
+{
+   int a= digitalRead(P1_6);
+   int b=digitalRead(P2_5);
+
+        digitalWrite(trigPin, LOW);
+        delayMicroseconds(10);
+        digitalWrite(trigPin, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(trigPin, LOW);
+
+        duration=pulseIn(echoPin, HIGH);
+        distance=(duration*0.034/2);
+
+        if(distance<100)
+        {
+          digitalWrite(P1_2, HIGH);
+          digitalWrite(P1_3, HIGH);
+          digitalWrite(P1_4, HIGH);
+          digitalWrite(P1_5, HIGH);
+          Send();
+          
+        }
+        
+        if(distance>100 & distance<250)
+         {
+          digitalWrite(P1_2, LOW);
+          digitalWrite(P1_3, HIGH);
+          digitalWrite(P1_4, HIGH);
+          digitalWrite(P1_5, HIGH);
+          delay(50);
+         }
+
+         if(distance>250 & distance<500)
+         {
+          digitalWrite(P1_2, LOW);
+          digitalWrite(P1_3, LOW);
+          digitalWrite(P1_4, HIGH);
+          digitalWrite(P1_5, HIGH);
+          delay(50);
+         }
+         if(distance>500 & distance<800)
+         {
+          digitalWrite(P1_2, LOW);
+          digitalWrite(P1_3, LOW);
+          digitalWrite(P1_4, LOW);
+          digitalWrite(P1_5, HIGH);
+          delay(50);
+         }
+          else
+         {
+          digitalWrite(P1_2, LOW);
+          digitalWrite(P1_3, LOW);
+          digitalWrite(P1_4, LOW);
+          digitalWrite(P1_5, LOW);
+          delay(50);
+         }
+
+        if(a==1 & b==1)
+    {
+         digitalWrite(P2_4, HIGH);
+         digitalWrite(P2_0, HIGH);
+         digitalWrite(P2_1, LOW);
+         delay(200);
+         digitalWrite(P2_0, LOW);
+         digitalWrite(P2_1, LOW);
+         delay(200);
+         digitalWrite(P2_2, HIGH);
+         digitalWrite(P2_3, LOW);
+         delay(200);
+         digitalWrite(P2_2, LOW);
+         digitalWrite(P2_3, HIGH);
+         delay(200);
+         digitalWrite(P2_0, LOW);
+         digitalWrite(P2_1, HIGH);
+         delay(200);
+         digitalWrite(P2_0, LOW);
+         digitalWrite(P2_1, LOW);
+         digitalWrite(P2_2, LOW);
+         digitalWrite(P2_3, LOW);
+  
+} 
+
+if(a==0 and b==1)
+{
+  digitalWrite(P2_4, HIGH);
+  digitalWrite(P2_2, HIGH);
+  digitalWrite(P2_3, LOW);
+  delay(200);
+  digitalWrite(P2_3, LOW);
+  digitalWrite(P2_3, LOW);
+  delay(200);
+  digitalWrite(P2_2, LOW);
+  digitalWrite(P2_3, HIGH);
+}
+
+if(b==0)
+{
+  digitalWrite(P2_4, LOW);
+  digitalWrite(P2_0, LOW);
+  digitalWrite(P2_1, LOW);
+  delay(200);
+  digitalWrite(P2_2, LOW);
+  digitalWrite(P2_3, LOW);
+}
+
+
+
+}
+
+void Send()
+{
+  GSM.println("AT");
+  delay(1000);
+  GSM.println("ATE0");
+  delay(1000);
+  GSM.println("AT+CMGF=1");
+  GSM.println("AT+CMGS=");
+  GSM.print('"');
+  GSM.print("9158105646");
+  GSM.println('"');
+  delay(500);
+
+  GSM.println("Garbage level full");
+  GSM.print("kamothe sector 8, Garbage Number 1");
+  delay(500);
+  /*GSM.print("longitude");
+  GSM.print("longitude");
+  GSM.print("Click on link to see location");
+  GSM.print("http://maps.google.com/maps?&z=15&mrt=yp&t=k&q=");
+  GSM.print(latitude,6);
+  GSM.print("+");
+  GSM.print(logitude,6);
+  GSM.Write(26);*/
+  delay(4000);
+}
